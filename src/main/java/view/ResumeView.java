@@ -12,46 +12,25 @@ public class ResumeView {
 	Scanner sc = new Scanner(System.in);
 
 	public PersonInfo inputPersonInfo() {
-		PersonInfo personInfo = new PersonInfo();
-
 		System.out.print("사진 파일명을 입력하세요:");
-		personInfo.setPhoto(sc.nextLine());
+		String photo = sc.nextLine();
 
 		System.out.print("이름을 입력하세요:");
-		personInfo.setName(sc.nextLine());
+		String name = sc.nextLine();
 
 		System.out.print("이메일을 입력하세요:");
-		personInfo.setEmail(sc.nextLine());
+		String email = sc.nextLine();
 
 		System.out.print("주소를 입력하세요:");
-		personInfo.setAddress(sc.nextLine());
+		String address = sc.nextLine();
 
 		System.out.print("전화번호를 입력하세요:");
-		personInfo.setPhoneNumber(sc.nextLine());
+		String phoneNumber = sc.nextLine();
 
 		System.out.print("생년월일을 입력하세요 (예: 1990-01-01):");
-		personInfo.setBirthDate(sc.nextLine());
+		String birthDate = sc.nextLine();
 
-		return personInfo;
-	}
-
-	public List<Career> inputCareerList() {
-		List<Career> careerList = new ArrayList<>();
-
-		while (true) {
-			System.out.println("경력 정보를 입력하세요 (종료는 q):");
-			System.out.println("근무기간 근무처 담당업무 근속연수");
-			String careerInput = sc.nextLine();
-
-			if ("q".equals(careerInput)) {
-				break;
-			}
-
-			String[] sArr = careerInput.split(" ");
-			careerList.add(new Career(sArr[0], sArr[1], sArr[2], sArr[3]));
-		}
-
-		return careerList;
+		return new PersonInfo(photo, name, email, address, phoneNumber, birthDate);
 	}
 
 	public List<Education> inputEducationList() {
@@ -71,6 +50,25 @@ public class ResumeView {
 		}
 
 		return educationList;
+	}
+
+	public List<Career> inputCareerList() {
+		List<Career> careerList = new ArrayList<>();
+
+		while (true) {
+			System.out.println("경력 정보를 입력하세요 (종료는 q):");
+			System.out.println("근무기간 근무처 담당업무 근속연수");
+			String careerInput = sc.nextLine();
+
+			if ("q".equals(careerInput)) {
+				break;
+			}
+
+			String[] sArr = careerInput.split(" ");
+			careerList.add(new Career(sArr[0], sArr[1], sArr[2], sArr[3]));
+		}
+
+		return careerList;
 	}
 
 	public String inputSelfIntroduction() {
