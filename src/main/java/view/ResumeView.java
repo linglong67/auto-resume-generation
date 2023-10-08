@@ -9,7 +9,11 @@ import model.Education;
 import model.PersonInfo;
 
 public class ResumeView {
-	Scanner sc = new Scanner(System.in);
+	Scanner sc;
+
+	public ResumeView() {
+		sc = new Scanner(System.in);
+	}
 
 	public PersonInfo inputPersonInfo() {
 		System.out.print("사진 파일명을 입력하세요:");
@@ -41,11 +45,16 @@ public class ResumeView {
 			System.out.println("졸업년도 학교명 전공 졸업여부");
 			String educationInput = sc.nextLine();
 
-			if ("q".equals(educationInput)) {
+			if ("q".equalsIgnoreCase(educationInput)) {
 				break;
 			}
 
 			String[] sArr = educationInput.split(" ");
+			if (sArr.length != 4) {
+				System.out.println("잘못된 입력입니다.");
+				continue;
+			}
+
 			educationList.add(new Education(sArr[0], sArr[1], sArr[2], sArr[3]));
 		}
 
@@ -60,11 +69,16 @@ public class ResumeView {
 			System.out.println("근무기간 근무처 담당업무 근속연수");
 			String careerInput = sc.nextLine();
 
-			if ("q".equals(careerInput)) {
+			if ("q".equalsIgnoreCase(careerInput)) {
 				break;
 			}
 
 			String[] sArr = careerInput.split(" ");
+			if (sArr.length != 4) {
+				System.out.println("잘못된 입력입니다.");
+				continue;
+			}
+
 			careerList.add(new Career(sArr[0], sArr[1], sArr[2], sArr[3]));
 		}
 
