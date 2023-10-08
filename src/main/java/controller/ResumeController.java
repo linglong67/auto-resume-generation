@@ -31,23 +31,27 @@ public class ResumeController {
 	private static final int PHOTO_WIDTH = (int) (35 * 2.83465);
 	private static final int PHOTO_HEIGHT = (int) (45 * 2.83465);
 
+	private ResumeView view;
+	private XSSFWorkbook workbook;
+
+	public ResumeController() {
+		view = new ResumeView();
+		workbook = new XSSFWorkbook();
+	}
+
 	public static void main(String[] args) {
 		ResumeController controller = new ResumeController();
 		controller.createResume();
 	}
 
-	public void createResume() {
-		ResumeView view = new ResumeView();
-
+	private void createResume() {
 		PersonInfo personInfo = view.inputPersonInfo();
 		List<Education> educations = view.inputEducationList();
 		List<Career> careers = view.inputCareerList();
 		String selfIntroduction = view.inputSelfIntroduction();
 
-		XSSFWorkbook workbook = new XSSFWorkbook();
-
 		Sheet resumeSheet = workbook.createSheet("이력서");
-		createResumeSheet(workbook, resumeSheet, personInfo, educations, careers);
+		createResumeSheet(resumeSheet, personInfo, educations, careers);
 
 		CellStyle cellStyle = workbook.createCellStyle();
 		getWrapCellStyle(cellStyle);
@@ -55,20 +59,20 @@ public class ResumeController {
 		Sheet selfIntroductionSheet = workbook.createSheet("자기소개서");
 		createSelfIntroductionSheet(selfIntroductionSheet, cellStyle, selfIntroduction);
 
-		saveWorkbookToFile(workbook);
+		saveWorkbookToFile();
 	}
 
-	public void getWrapCellStyle(CellStyle cellStyle) {
+	private void getWrapCellStyle(CellStyle cellStyle) {
 		cellStyle.setWrapText(true);
 	}
 
-	public void createResumeSheet(XSSFWorkbook workbook, Sheet sheet, PersonInfo personInfo, List<Education> educations, List<Career> careers) {
-		createPersonInfo(workbook, sheet, personInfo);
+	private void createResumeSheet(Sheet sheet, PersonInfo personInfo, List<Education> educations, List<Career> careers) {
+		createPersonInfo(sheet, personInfo);
 		createEducations(sheet, educations);
 		createCareers(sheet, careers);
 	}
 
-	public void createPersonInfo(XSSFWorkbook workbook, Sheet sheet, PersonInfo personInfo) {
+	private void createPersonInfo(Sheet sheet, PersonInfo personInfo) {
 		Row headerRow = sheet.createRow(START_ROW_NUM);
 		headerRow.createCell(0).setCellValue("사진");
 		headerRow.createCell(1).setCellValue("이름");
@@ -78,7 +82,7 @@ public class ResumeController {
 		headerRow.createCell(5).setCellValue("생년월일");
 
 		Row row = sheet.createRow(START_ROW_NUM + 1);
-		createPhotoCell(workbook, sheet, row, personInfo.getPhoto());
+		createPhotoCell(sheet, row, personInfo.getPhoto());
 		row.createCell(1).setCellValue(personInfo.getName());
 		row.createCell(2).setCellValue(personInfo.getEmail());
 		row.createCell(3).setCellValue(personInfo.getAddress());
@@ -86,7 +90,7 @@ public class ResumeController {
 		row.createCell(5).setCellValue(personInfo.getBirthDate());
 	}
 
-	public void createPhotoCell(XSSFWorkbook workbook, Sheet sheet, Row row, String photo) {
+	private void createPhotoCell(Sheet sheet, Row row, String photo) {
 		try (InputStream photoStream = new FileInputStream(photo)) {
 			BufferedImage originalImage = ImageIO.read(photoStream);
 
@@ -113,7 +117,7 @@ public class ResumeController {
 		}
 	}
 
-	public byte[] getImageBytes(BufferedImage originalImage) throws IOException {
+	private byte[] getImageBytes(BufferedImage originalImage) throws IOException {
 		Image resizedImage = originalImage.getScaledInstance(PHOTO_WIDTH, PHOTO_HEIGHT, Image.SCALE_SMOOTH);
 		BufferedImage resizedBufferedImage = new BufferedImage(PHOTO_WIDTH, PHOTO_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g2d = resizedBufferedImage.createGraphics();
@@ -126,7 +130,7 @@ public class ResumeController {
 		return baos.toByteArray();
 	}
 
-	public void createEducations(Sheet sheet, List<Education> educations) {
+	private void createEducations(Sheet sheet, List<Education> educations) {
 		int rowIndex = sheet.getLastRowNum() + 1;
 
 		Row headerRow = sheet.createRow(rowIndex++);
@@ -144,7 +148,7 @@ public class ResumeController {
 		}
 	}
 
-	public void createCareers(Sheet sheet, List<Career> careers) {
+	private void createCareers(Sheet sheet, List<Career> careers) {
 		int rowIndex = sheet.getLastRowNum() + 1;
 
 		Row headerRow = sheet.createRow(rowIndex++);
@@ -162,7 +166,7 @@ public class ResumeController {
 		}
 	}
 
-	public void createSelfIntroductionSheet(Sheet sheet, CellStyle cellStyle, String selfIntroduction) {
+	private void createSelfIntroductionSheet(Sheet sheet, CellStyle cellStyle, String selfIntroduction) {
 		Row row = sheet.createRow(START_ROW_NUM);
 		Cell cell = row.createCell(0);
 
@@ -170,7 +174,7 @@ public class ResumeController {
 		cell.setCellStyle(cellStyle);
 	}
 
-	public void saveWorkbookToFile(Workbook workbook) {
+	private void saveWorkbookToFile() {
 		try {
 			// 엑셀 파일 저장
 			String filename = "이력서.xlsx";
