@@ -50,12 +50,16 @@ public class ResumeController {
 		createResumeSheet(workbook, resumeSheet, personInfo, educations, careers);
 
 		CellStyle cellStyle = workbook.createCellStyle();
-		cellStyle.setWrapText(true);
+		getWrapCellStyle(cellStyle);
 
 		Sheet selfIntroductionSheet = workbook.createSheet("자기소개서");
 		createSelfIntroductionSheet(selfIntroductionSheet, cellStyle, selfIntroduction);
 
 		saveWorkbookToFile(workbook);
+	}
+
+	public void getWrapCellStyle(CellStyle cellStyle) {
+		cellStyle.setWrapText(true);
 	}
 
 	public void createResumeSheet(XSSFWorkbook workbook, Sheet sheet, PersonInfo personInfo, List<Education> educations, List<Career> careers) {
